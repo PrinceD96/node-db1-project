@@ -49,4 +49,22 @@ router.put("/:id", validateId(db, "accounts"), validateAccount, (req, res) => {
 		);
 });
 
+router.delete("/:id", validateId(db, "accounts"), (req, res) => {
+	const { id } = req.params;
+
+	db("accounts")
+		.where({ id })
+		.del()
+		.then((count) => {
+			count
+				? res.status(200).json({ message: "Account deleted successfully" })
+				: null;
+		})
+		.catch((error) =>
+			res
+				.status(500)
+				.json({ message: `Error deleting account wit id ${id}`, error })
+		);
+});
+
 module.exports = router;
