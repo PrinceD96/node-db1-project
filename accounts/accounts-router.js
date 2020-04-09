@@ -14,4 +14,22 @@ router.get("/", (req, res) => {
 		);
 });
 
+router.get("/:id", (req, res) => {
+	const { id } = req.params;
+
+	db("accounts")
+		.where({ id })
+		.first()
+		.then((account) => {
+			account
+				? res.status(200).json(account)
+				: res.status(404).json({ message: "Account not found" });
+		})
+		.catch((error) =>
+			res
+				.status(500)
+				.json({ message: `Error retrieving account with id ${id}`, error })
+		);
+});
+
 module.exports = router;
