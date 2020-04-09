@@ -32,4 +32,21 @@ router.get("/:id", (req, res) => {
 		);
 });
 
+router.post("/", (req, res) => {
+	const newAccount = req.body;
+
+	!newAccount.name || !newAccount.budget
+		? res.status(400).json({
+				message: `Please provide required ${
+					!newAccount.name ? "name" : "budget"
+				} field for the account`,
+		  })
+		: db("accounts")
+				.insert(newAccount)
+				.then((account) => res.status(200).json(account))
+				.catch((error) =>
+					res.status(500).json({ message: "Error creating new account", error })
+				);
+});
+
 module.exports = router;
